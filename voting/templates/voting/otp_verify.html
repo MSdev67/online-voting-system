@@ -1,0 +1,144 @@
+{% extends 'voting/base.html' %}
+
+{% block title %}OTP Verification - VoteIndia{% endblock %}
+
+{% block extra_css %}
+<style>
+    .otp-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        overflow: hidden;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+    .otp-header {
+        background: linear-gradient(135deg, #1a237e, #303f9f);
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
+    }
+    .otp-body {
+        padding: 2rem;
+    }
+    .otp-icon {
+        font-size: 2.5rem;
+        color: #1a237e;
+        margin-bottom: 1rem;
+    }
+    .otp-input {
+        letter-spacing: 0.5rem;
+        font-size: 1.5rem;
+        text-align: center;
+        padding: 0.75rem;
+    }
+    .btn-verify {
+        background: linear-gradient(135deg, #1a237e, #303f9f);
+        border: none;
+        padding: 12px;
+        font-weight: 600;
+        width: 100%;
+    }
+    .timer {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="otp-card">
+                <div class="otp-header">
+                    <h3><i class="fas fa-shield-alt me-2"></i> OTP Verification</h3>
+                </div>
+                <div class="otp-body text-center">
+                    <div class="otp-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <p class="mb-4">We've sent a 6-digit verification code to your registered mobile number</p>
+                    
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label for="id_otp" class="form-label fw-bold mb-3">Enter OTP</label>
+                            <input type="text" name="otp" id="id_otp" 
+                                   class="form-control otp-input" 
+                                   placeholder="••••••" 
+                                   required
+                                   pattern="\d{6}"
+                                   maxlength="6">
+                            <div class="invalid-feedback">
+                                Please enter the 6-digit OTP
+                            </div>
+                            <div class="timer mt-2">
+                                <i class="far fa-clock me-1"></i>
+                                <span id="countdown">02:00</span> remaining
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-verify btn-lg text-white">
+                                <i class="fas fa-check-circle me-2"></i> Verify & Continue
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="mt-4 text-center">
+                        <p class="mb-2">Didn't receive the OTP?</p>
+                        <a href="#" class="btn btn-outline-secondary" id="resend-otp">
+                            <i class="fas fa-redo me-2"></i> Resend OTP
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Countdown timer
+function startTimer(duration, display) {
+    let timer = duration, minutes, seconds;
+    const interval = setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer < 0) {
+            clearInterval(interval);
+            document.getElementById('resend-otp').classList.remove('btn-outline-secondary');
+            document.getElementById('resend-otp').classList.add('btn-primary');
+        }
+    }, 1000);
+}
+
+window.onload = function () {
+    const twoMinutes = 120; // 2 minutes in seconds
+    const display = document.querySelector('#countdown');
+    startTimer(twoMinutes, display);
+};
+
+// Client-side validation
+(function () {
+    'use strict'
+    const forms = document.querySelectorAll('.needs-validation')
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+})();
+</script>
+{% endblock %}

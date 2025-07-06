@@ -1,0 +1,135 @@
+{% extends 'voting/base.html' %}
+
+{% block title %}Voter Login - VoteIndia{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    .card-header {
+        background: linear-gradient(135deg, #1a237e, #303f9f);
+        color: white;
+        padding: 1.5rem;
+    }
+    .form-control {
+        border-radius: 8px;
+        padding: 12px 15px;
+        border: 1px solid #e0e0e0;
+    }
+    .form-control:focus {
+        border-color: #1a237e;
+        box-shadow: 0 0 0 0.25rem rgba(26, 35, 126, 0.15);
+    }
+    .btn-login {
+        background: linear-gradient(135deg, #1a237e, #303f9f);
+        border: none;
+        padding: 12px;
+        font-weight: 600;
+    }
+    .btn-login:hover {
+        background: linear-gradient(135deg, #303f9f, #1a237e);
+    }
+    .login-logo {
+        height: 80px;
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="login-card">
+                <div class="card-header text-center">
+                    <img src="/static/logo.png" alt="VoteIndia" class="login-logo">
+                    <h3>Secure Voter Login</h3>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label for="id_voter_id" class="form-label fw-bold">
+                                <i class="fas fa-id-card me-2 text-primary"></i> Voter ID
+                            </label>
+                            <input type="text" name="voter_id" id="id_voter_id" 
+                                   class="form-control" placeholder="Enter your Voter ID" required>
+                            <div class="invalid-feedback">
+                                Please enter your Voter ID
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="id_aadhar_number" class="form-label fw-bold">
+                                <i class="fas fa-address-card me-2 text-primary"></i> Aadhar Number
+                            </label>
+                            <input type="text" name="aadhar_number" id="id_aadhar_number" 
+                                   class="form-control" placeholder="Enter 12-digit Aadhar" required
+                                   pattern="\d{12}">
+                            <div class="invalid-feedback">
+                                Please enter valid 12-digit Aadhar number
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="id_phone_number" class="form-label fw-bold">
+                                <i class="fas fa-mobile-alt me-2 text-primary"></i> Mobile Number
+                            </label>
+                            <input type="tel" name="phone_number" id="id_phone_number" 
+                                   class="form-control" placeholder="Enter 10-digit mobile" required
+                                   pattern="\d{10}">
+                            <div class="invalid-feedback">
+                                Please enter valid 10-digit mobile number
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-login btn-lg text-white">
+                                <i class="fas fa-paper-plane me-2"></i> Send OTP
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="text-center mt-4">
+                        <p class="mb-2">Don't have an account?</p>
+                        <a href="{% url 'register' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-user-plus me-2"></i> Register Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="#" class="text-muted small">
+                    <i class="fas fa-question-circle me-1"></i> Need help logging in?
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Client-side form validation
+(function () {
+    'use strict'
+    
+    const forms = document.querySelectorAll('.needs-validation')
+    
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+</script>
+{% endblock %}

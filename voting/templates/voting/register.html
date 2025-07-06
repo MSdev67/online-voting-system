@@ -1,0 +1,172 @@
+{% extends 'voting/base.html' %}
+
+{% block title %}Voter Registration - VoteIndia{% endblock %}
+
+{% block extra_css %}
+<style>
+    .registration-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    .card-header {
+        background: linear-gradient(135deg, #1a237e, #303f9f);
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
+    }
+    .form-control {
+        border-radius: 8px;
+        padding: 12px 15px;
+        border: 1px solid #e0e0e0;
+    }
+    .form-control:focus {
+        border-color: #1a237e;
+        box-shadow: 0 0 0 0.25rem rgba(26, 35, 126, 0.15);
+    }
+    .btn-register {
+        background: linear-gradient(135deg, #1a237e, #303f9f);
+        border: none;
+        padding: 12px;
+        font-weight: 600;
+        width: 100%;
+    }
+    .is-invalid {
+        border-color: #dc3545;
+    }
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="registration-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-user-plus me-2"></i> Voter Registration</h3>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        Please correct the errors below.
+                    </div>
+                    {% endif %}
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Username Field -->
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label fw-bold">Username</label>
+                            <input type="text" name="username" id="id_username" 
+                                   class="form-control {% if form.username.errors %}is-invalid{% endif %}" 
+                                   value="{{ form.username.value|default:'' }}"
+                                   required>
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.username.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted">Choose a unique username (this will be your login ID)</small>
+                        </div>
+                        
+                        <!-- Password Fields -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_password1" class="form-label fw-bold">Password</label>
+                                <input type="password" name="password1" id="id_password1" 
+                                       class="form-control {% if form.password1.errors %}is-invalid{% endif %}" 
+                                       required>
+                                {% if form.password1.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.password1.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_password2" class="form-label fw-bold">Confirm Password</label>
+                                <input type="password" name="password2" id="id_password2" 
+                                       class="form-control {% if form.password2.errors %}is-invalid{% endif %}" 
+                                       required>
+                                {% if form.password2.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.password2.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Voter Information -->
+                        <div class="mb-3">
+                            <label for="id_voter_id" class="form-label fw-bold">Voter ID</label>
+                            <input type="text" name="voter_id" id="id_voter_id" 
+                                   class="form-control {% if form.voter_id.errors %}is-invalid{% endif %}" 
+                                   value="{{ form.voter_id.value|default:'' }}"
+                                   required>
+                            {% if form.voter_id.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.voter_id.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_aadhar_number" class="form-label fw-bold">Aadhar Number</label>
+                            <input type="text" name="aadhar_number" id="id_aadhar_number" 
+                                   class="form-control {% if form.aadhar_number.errors %}is-invalid{% endif %}" 
+                                   value="{{ form.aadhar_number.value|default:'' }}"
+                                   required>
+                            {% if form.aadhar_number.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.aadhar_number.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="id_phone_number" class="form-label fw-bold">Phone Number</label>
+                            <input type="tel" name="phone_number" id="id_phone_number" 
+                                   class="form-control {% if form.phone_number.errors %}is-invalid{% endif %}" 
+                                   value="{{ form.phone_number.value|default:'' }}"
+                                   required>
+                            {% if form.phone_number.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.phone_number.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-register text-white">
+                                <i class="fas fa-user-plus me-2"></i> Register
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="text-center mt-4">
+                        <p class="mb-0">Already registered? <a href="{% url 'login' %}">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

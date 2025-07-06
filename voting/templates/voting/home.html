@@ -1,0 +1,148 @@
+{% extends 'voting/base.html' %}
+
+{% block title %}Welcome to VoteIndia{% endblock %}
+
+{% block extra_css %}
+<style>
+    .tricolor-stripe {
+        height: 8px;
+        background: linear-gradient(to right, #FF9933 33%, #FFFFFF 33% 66%, #138808 66%);
+        margin-bottom: 2rem;
+    }
+    .welcome-card {
+        border-left: 5px solid #1a237e;
+        transition: all 0.3s ease;
+    }
+    .welcome-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .login-card {
+        border-top: 5px solid #1a237e;
+    }
+    .election-timeline {
+        border-left: 3px solid #1a237e;
+        padding-left: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="tricolor-stripe"></div>
+
+<div class="container">
+    <div class="row g-4">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <div class="card welcome-card h-100">
+                <div class="card-body">
+                    <h1 class="display-5 fw-bold text-primary mb-3">
+                        <i class="fas fa-vote-yea text-danger"></i> Welcome to VoteIndia
+                    </h1>
+                    <p class="lead text-muted mb-4">
+                        Your secure digital gateway to participate in the world's largest democracy.
+                    </p>
+                    
+                    <div class="bg-light p-4 rounded mb-4">
+                        <h4 class="text-primary mb-3">
+                            <i class="fas fa-info-circle"></i> About Indian Elections
+                        </h4>
+                        <p>
+                            India's elections are the largest democratic exercise in human history, 
+                            with over 900 million eligible voters. Our online voting system brings 
+                            this democratic right to your fingertips while maintaining complete security 
+                            and transparency.
+                        </p>
+                    </div>
+                    
+                    {% if current_election %}
+                    <div class="election-timeline mt-4">
+                        <h4 class="text-primary mb-3">
+                            <i class="fas fa-calendar-alt"></i> Current Election
+                        </h4>
+                        <h5 class="fw-bold">{{ current_election.name }}</h5>
+                        <p>{{ current_election.description }}</p>
+                        <div class="d-flex align-items-center text-muted">
+                            <i class="far fa-clock me-2"></i>
+                            <span>
+                                {{ current_election.start_time|date:"M d, Y" }} to 
+                                {{ current_election.end_time|date:"M d, Y" }}
+                            </span>
+                        </div>
+                        {% if current_election.is_active %}
+                            <span class="badge bg-success mt-2">Voting Active</span>
+                        {% else %}
+                            <span class="badge bg-secondary mt-2">Coming Soon</span>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Login Card -->
+        <div class="col-lg-4">
+            <div class="card login-card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <img src="/static/logo.png" alt="VoteIndia" class="mb-4" style="height: 80px;">
+                    <h4 class="card-title mb-4">Voter Portal</h4>
+                    
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg w-100 mb-3">
+                        <i class="fas fa-sign-in-alt me-2"></i> Login
+                    </a>
+                    
+                    <p class="text-muted mb-4">or</p>
+                    
+                    <a href="{% url 'register' %}" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-user-plus me-2"></i> New Registration
+                    </a>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-start small text-muted">
+                        <p>
+                            <i class="fas fa-shield-alt text-success me-2"></i>
+                            Secure military-grade encryption
+                        </p>
+                        <p>
+                            <i class="fas fa-fingerprint text-primary me-2"></i>
+                            Aadhar verified authentication
+                        </p>
+                        <p>
+                            <i class="fas fa-mobile-alt text-info me-2"></i>
+                            OTP-based verification
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Call to Action -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="p-4 rounded-3" style="background: linear-gradient(135deg, #ff9933, #ffffff, #138808);">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h3 class="mb-3"><i class="fas fa-flag me-2"></i> Your Vote Matters!</h3>
+                        <p class="mb-0">
+                            Every vote counts in shaping India's future. Exercise your democratic right today.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        {% if current_election and current_election.is_active %}
+                            <a href="{% url 'login' %}" class="btn btn-dark btn-lg">
+                                <i class="fas fa-vote-yea me-2"></i> Vote Now
+                            </a>
+                        {% else %}
+                            <a href="{% url 'register' %}" class="btn btn-dark btn-lg">
+                                <i class="fas fa-user-plus me-2"></i> Register
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

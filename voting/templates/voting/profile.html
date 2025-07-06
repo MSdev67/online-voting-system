@@ -1,0 +1,90 @@
+{% extends 'voting/base.html' %}
+
+{% block title %}My Profile - VoteIndia{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body text-center">
+                    <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=random" 
+                         class="rounded-circle mb-3" width="150" height="150" alt="Profile">
+                    <h4>{{ request.user.username }}</h4>
+                    <p class="text-muted">Registered Voter</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Voter Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>Voter ID</th>
+                                    <td>{{ voter.voter_id }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Aadhar Number</th>
+                                    <td>•••• •••• •••• {{ voter.aadhar_number|slice:"8:12" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Phone Number</th>
+                                    <td>{{ voter.phone_number }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Voting Status</th>
+                                    <td>
+                                        {% if voter.has_voted %}
+                                            <span class="badge bg-success">Voted</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Not Voted</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            {% if voting_history %}
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Voting History</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Election</th>
+                                    <th>Candidate</th>
+                                    <th>Party</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for vote in voting_history %}
+                                <tr>
+                                    <td>{{ vote.election.name }}</td>
+                                    <td>{{ vote.candidate.name }}</td>
+                                    <td>{{ vote.candidate.party.name }}</td>
+                                    <td>{{ vote.timestamp|date:"Y-m-d" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

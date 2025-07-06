@@ -1,0 +1,113 @@
+{% extends 'voting/base.html' %}
+
+{% block title %}Cast Your Vote - VoteIndia{% endblock %}
+
+{% block extra_css %}
+<style>
+    .election-info {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-left: 4px solid #1a237e;
+        border-radius: 0 8px 8px 0;
+    }
+    .candidate-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    .candidate-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .candidate-photo {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 10px 10px 0 0;
+    }
+    .party-badge {
+        display: inline-flex;
+        align-items: center;
+        background: #f8f9fa;
+        padding: 5px 12px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+    }
+    .party-symbol {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        margin-right: 8px;
+        object-fit: contain;
+    }
+    .btn-vote {
+        background: linear-gradient(135deg, #1a237e, #303f9f);
+        border: none;
+        padding: 10px 20px;
+        font-weight: 500;
+        width: 100%;
+    }
+    .btn-vote:hover {
+        background: linear-gradient(135deg, #303f9f, #1a237e);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="election-info p-4 mb-4">
+                <h3 class="mb-2">{{ election.name }}</h3>
+                <p class="mb-1"><i class="far fa-calendar-alt me-2"></i> {{ election.start_time|date:"M d, Y" }} - {{ election.end_time|date:"M d, Y" }}</p>
+                <p class="mb-0"><i class="fas fa-info-circle me-2"></i> {{ election.description }}</p>
+            </div>
+            <h2 class="text-center mb-4">
+                <i class="fas fa-vote-yea text-primary"></i> Cast Your Vote
+            </h2>
+        </div>
+    </div>
+
+    {% if candidates %}
+    <div class="row g-4">
+        {% for candidate in candidates %}
+        <div class="col-lg-4 col-md-6">
+            <div class="candidate-card">
+                <img src="{{ candidate.photo.url }}" class="candidate-photo" alt="{{ candidate.name }}">
+                <div class="card-body">
+                    <h4 class="card-title mb-3">{{ candidate.name }}</h4>
+                    
+                    <div class="party-badge mb-3">
+                        <img src="{{ candidate.party.symbol.url }}" class="party-symbol" alt="{{ candidate.party.name }}">
+                        <span>{{ candidate.party.name }}</span>
+                    </div>
+                    
+                    {% if candidate.bio %}
+                    <p class="card-text text-muted mb-4">{{ candidate.bio|truncatechars:100 }}</p>
+                    {% endif %}
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="candidate" value="{{ candidate.id }}">
+                        <button type="submit" class="btn btn-vote text-white">
+                            <i class="fas fa-check-circle me-2"></i> Vote for {{ candidate.name|truncatechars:15 }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <div class="alert alert-info mx-auto" style="max-width: 600px;">
+            <h4 class="alert-heading">
+                <i class="fas fa-info-circle"></i> No Candidates Available
+            </h4>
+            <p>There are no candidates registered for this election yet.</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
