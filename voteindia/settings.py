@@ -89,3 +89,22 @@ LOGOUT_REDIRECT_URL = 'home'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Required for production
+DEBUG = False
+ALLOWED_HOSTS = ['*']  # Or your Railway URL (e.g., ['web-production-TBB0.up.railway.app'])
+
+# Static files (if applicable)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('PGDATABASE'),
+        'USER': os.getenv('PGUSER'),
+        'PASSWORD': os.getenv('PGPASSWORD'),
+        'HOST': os.getenv('PGHOST'),
+        'PORT': os.getenv('PGPORT'),
+    }
+}
